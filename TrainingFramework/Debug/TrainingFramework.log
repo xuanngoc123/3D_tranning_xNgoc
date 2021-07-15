@@ -1,4 +1,3 @@
 ﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  model.cpp
-model.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-  TrainingFramework.vcxproj -> C:\Users\xuann\Desktop\#2 - 3D Training\3D\TrainingFramework_VS2013\BIN\TrainingFramework.exe
+  TrainingFramework.cpp
+C:\Users\xuann\Desktop\#2 - 3D Training\3D\TrainingFramework_VS2013\TrainingFramework\TrainingFramework.cpp(83,2): error C2064: term does not evaluate to a function taking 1 arguments
