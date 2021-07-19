@@ -11,6 +11,8 @@ public:
 	GLint colorAttribute;
 	GLint textureLoc;
 	GLint uvLoc;
+	GLint u_transLoc;
+	GLint textureUniform;
 	int Init(char * fileVertexShader, char * fileFragmentShader);
 	~Shaders();
 };

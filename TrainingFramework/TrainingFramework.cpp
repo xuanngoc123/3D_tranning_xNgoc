@@ -7,22 +7,26 @@
 #include "Shaders.h"
 #include "Globals.h"
 #include <conio.h>
-#include "texture.h"
+#include "Texture.h"
 #include "Model.h"
+#include "Object.h"
 #include<iostream>
 
 Shaders myShaders;
 Texture *myTexture = new Texture();
 Model *myModel = new Model();
+Object* myObject = new Object();
+Matrix a;
+GLfloat agle=0.0f;
 
 int Init ( ESContext *esContext )
 {
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	myTexture->initTexture("../Texture/Woman1.tga");
-	glBindTexture(GL_TEXTURE_2D, myTexture->TextureId);
 	myModel->initNFG("../Model/Woman1.nfg");
-	glBindBuffer(GL_ARRAY_BUFFER, myModel->m_vboId);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myModel->m_iboID);
+	myObject->InitObject();
+	myObject->Ry.SetRotationY(agle);
+
 	//creation of shaders and program 
 	return myShaders.Init("../Resources/Shaders/TriangleShaderVS.vs", "../Resources/Shaders/TriangleShaderFS.fs");
 }
@@ -30,14 +34,14 @@ int Init ( ESContext *esContext )
 void Draw ( ESContext *esContext )
 {
 	glEnable(GL_DEPTH_TEST);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(myShaders.program);
 
 	// 
-	glBindBuffer(GL_ARRAY_BUFFER, myModel->m_vboId);
 	glBindTexture(GL_TEXTURE_2D, myTexture->TextureId);
-
+	glBindBuffer(GL_ARRAY_BUFFER, myModel->m_vboId);
 	if (myShaders.positionAttribute != -1)
 	{
 		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
@@ -45,24 +49,37 @@ void Draw ( ESContext *esContext )
 	}
 	if (myShaders.uvLoc != -1)
 	{
+		glUniform1i(myShaders.textureUniform, 0);
 		glVertexAttribPointer(myShaders.uvLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Vector3)));
 		glEnableVertexAttribArray(myShaders.uvLoc);
 	}
+	
+	
+	
+	glUniformMatrix4fv(myShaders.u_transLoc, 1, GL_FALSE, (const GLfloat*)myObject->Ry.m);
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myModel->m_iboID);
 	glDrawElements(GL_TRIANGLES, myModel->numberOfIndice, GL_UNSIGNED_INT, 0);
+		
+	
+	
 
+
+	
 
 	//đóng cổng
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	
 
 	eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
 
 void Update ( ESContext *esContext, float deltaTime )
 {
-
+	agle = agle + 0.01f;
+	myObject->Ry.SetRotationY(agle);
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
@@ -72,14 +89,7 @@ void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 
 void CleanUp()
 {
-	glBindBuffer(1, myModel->m_vboId);
-	glDeleteBuffers(1, &myModel->m_vboId);
-
-	glBindBuffer(1, myModel->m_iboID);
-	glDeleteBuffers(1, &myModel->m_iboID);
-
-	glBindTexture(1, myTexture->TextureId);
-	glDeleteTextures(1, &myTexture->TextureId);
+	
 }
 
 int _tmain(int argc, _TCHAR* argv[])
