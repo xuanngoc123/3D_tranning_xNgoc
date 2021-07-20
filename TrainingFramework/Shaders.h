@@ -13,6 +13,8 @@ public:
 	GLint uvLoc;
 	GLint u_transLoc;
 	GLint textureUniform;
+	GLint u_view;
+	GLint u_projection;
 	int Init(char * fileVertexShader, char * fileFragmentShader);
 	~Shaders();
 };

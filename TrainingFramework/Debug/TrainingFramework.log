@@ -1,8 +1,4 @@
 ﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  TrainingFramework.cpp
-  Object.cpp
-C:\Users\Xuan Ngoc\Desktop\#2 - 3D Training\3D\TrainingFramework_VS2013\TrainingFramework\Object.cpp(23,22): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\Xuan Ngoc\Desktop\#2 - 3D Training\3D\TrainingFramework_VS2013\TrainingFramework\Object.cpp(28,36): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-  Generating Code...
-Camera.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  Camera.cpp
+C:\Users\Xuan Ngoc\Desktop\#2 - 3D Training\3D\TrainingFramework_VS2013\TrainingFramework\Camera.cpp(69,41): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   TrainingFramework.vcxproj -> C:\Users\Xuan Ngoc\Desktop\#2 - 3D Training\3D\TrainingFramework_VS2013\BIN\TrainingFramework.exe

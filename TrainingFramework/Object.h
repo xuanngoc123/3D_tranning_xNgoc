@@ -1,13 +1,16 @@
 #pragma once
-//#include "stdafx.h"
+#include "stdafx.h"
 #include "../Utilities/utilities.h"
 //#include "../Utilities/Math.h"
 #include"Shaders.h"
-
+#include<vector>
+using namespace std;
 //#include "Math.h"
 
 class Object {
 public:
+	vector<Object*> listObj;
+
 	Matrix Rx;
 	Matrix Ry;
 	Matrix Rz;
@@ -17,15 +20,15 @@ public:
 	Matrix trans;
 
 	Matrix wordl;
-	Matrix view;
-	Matrix P;
+	
+	Matrix WVP;
 
 
 	Matrix setRotation();
 
 	Matrix setWordl();
-	Matrix setView();
-	Matrix setP();
+	//Matrix setView();
+	
 
 
 	void InitObject();

@@ -1,8 +1,9 @@
 ﻿// TrainingFramework.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+
 #include "../Utilities/utilities.h" // if you use STL, please include this line AFTER all other include
+#include "stdafx.h"
 #include "Vertex.h"
 #include "Shaders.h"
 #include "Globals.h"
@@ -10,23 +11,27 @@
 #include "Texture.h"
 #include "Model.h"
 #include "Object.h"
+#include"Camera.h"
 #include<iostream>
 
 Shaders myShaders;
 Texture *myTexture = new Texture();
 Model *myModel = new Model();
 Object* myObject = new Object();
+Camera* myCamera = new Camera();
 Matrix a;
 GLfloat agle=0.0f;
 
 int Init ( ESContext *esContext )
 {
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	myTexture->initTexture("../Texture/Woman1.tga");
 	myModel->initNFG("../Model/Woman1.nfg");
 	myObject->InitObject();
 	myObject->Ry.SetRotationY(agle);
-
+	myCamera->initCMR();
+	myCamera->setWorldMatrixCMR();
+	myCamera->setViewMatrixCMR();
 	//creation of shaders and program 
 	return myShaders.Init("../Resources/Shaders/TriangleShaderVS.vs", "../Resources/Shaders/TriangleShaderFS.fs");
 }
@@ -54,19 +59,14 @@ void Draw ( ESContext *esContext )
 		glEnableVertexAttribArray(myShaders.uvLoc);
 	}
 	
-	
-	
-	glUniformMatrix4fv(myShaders.u_transLoc, 1, GL_FALSE, (const GLfloat*)myObject->Ry.m);
+	glUniformMatrix4fv(myShaders.u_projection, 1, GL_FALSE, (const GLfloat*)myCamera->PCMR.m);
+	glUniformMatrix4fv(myShaders.u_view, 1, GL_FALSE, (const GLfloat*)myCamera->VCMR.m);
+	glUniformMatrix4fv(myShaders.u_transLoc, 1, GL_FALSE, (const GLfloat*)myObject->wordl.m);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myModel->m_iboID);
 	glDrawElements(GL_TRIANGLES, myModel->numberOfIndice, GL_UNSIGNED_INT, 0);
 		
 	
-	
-
-
-	
-
 	//đóng cổng
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -78,13 +78,15 @@ void Draw ( ESContext *esContext )
 
 void Update ( ESContext *esContext, float deltaTime )
 {
-	agle = agle + 0.01f;
-	myObject->Ry.SetRotationY(agle);
+	myCamera->updateCMR(deltaTime);
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
-{
-
+{	
+	float deltaTime = 0.5;
+	if (bIsPressed == true) {
+		myCamera->isPressKeyEvent(key, deltaTime);
+	}
 }
 
 void CleanUp()

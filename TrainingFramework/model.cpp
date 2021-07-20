@@ -1,6 +1,6 @@
 #include"stdafx.h"
 #include"Model.h"
-#include"MVP.h"
+#include"Object.h"
 #include<iostream>
 
 void Model::initNFG(char* fileName) {
