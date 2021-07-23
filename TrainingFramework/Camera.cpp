@@ -8,7 +8,7 @@ void Camera::initCMR() {
 	m_far = 100.0f;
 	m_near = 0.1f;
 	m_FOV = 45.0f;
-	position.x = 0.0f; position.y = 0.0f; position.z = -4.0f;
+	position.x = 0.0f; position.y = 1.0f; position.z = -4.0f;
 	target.x = 0.0f; target.y = 0.0f; target.z = -1.0f;
 	up.x = 0.0f; up.y = 1.0f; up.z = 0.0f;
 	Wup = up;
@@ -17,16 +17,12 @@ void Camera::initCMR() {
 	zasis = (position - target).Normalize();
 	xasis = (up.Cross(zasis)).Normalize();
 	yasis = (zasis.Cross(xasis)).Normalize();
+	setPerspectiveMatrixCMR();
+	updateCMR();
 }
-void Camera::updateCMR(float deltaTime) {
-	
+void Camera::updateCMR() {
 
-	
-	//Vector3 deltaMove = -(position - target).Normalize() * deltaTime * speedCamera;
-	//position += deltaMove;
-	//target += deltaMove;
-
-	right = target.Cross(Wup).Normalize();
+	right = zasis.Cross(Wup).Normalize();
 	up = right.Cross(target).Normalize();
 
 	zasis = (position - target).Normalize();
@@ -37,8 +33,7 @@ void Camera::updateCMR(float deltaTime) {
 	setTranslationCMR();
 	setWorldMatrixCMR();
 	setViewMatrixCMR();
-	setPerspectiveMatrixCMR();
-	setWVP();
+
 }
 void Camera::setRotationCMR() {
 	Rcm.m[0][0] = xasis.x; Rcm.m[0][1] = xasis.y; Rcm.m[0][2] = xasis.z; Rcm.m[0][3] = 0;
@@ -66,40 +61,69 @@ void Camera::setViewMatrixCMR() {
 void Camera::setPerspectiveMatrixCMR() {
 	float aspect = (float)Globals::screenWidth / Globals::screenHeight;
 	Matrix perspective;
-	perspective.SetPerspective(m_FOV * 3.14/180, aspect, m_near, m_far);
+	perspective.SetPerspective(m_FOV, aspect, m_near, m_far);
 	PCMR = perspective;
 }
-void Camera::setWVP() {
-	WVP = WCMR * VCMR * PCMR;
+
+void  Camera::MoveForward(GLfloat deltaTime) {
+	Vector3 deltaMove = -(position - target).Normalize() * deltaTime * speedCamera;
+	position += deltaMove;
+	target += deltaMove;
+}
+void  Camera::MoveBackward(GLfloat deltaTime) {
+	Vector3 deltaMove = -(position - target).Normalize() * deltaTime * speedCamera;
+	position -= deltaMove;
+	target -= deltaMove;
+}
+void  Camera::MoveLeft(GLfloat deltaTime) {
+	Vector3 deltaMove = -(Wup.Cross(zasis)).Normalize() * deltaTime * speedCamera;
+
+	position -= deltaMove;
+	target -= deltaMove;
+}
+void  Camera::MoveRight(GLfloat deltaTime) {
+	Vector3 deltaMove = -(Wup.Cross(zasis)).Normalize() * deltaTime * speedCamera;
+	position += deltaMove;
+	target += deltaMove;
 }
 
-void Camera::isPressKeyEvent(unsigned char key, float deltaTime) {
-	float velocity = speedCamera * deltaTime;
-	if (key == 'a' || key == 'A') {
-		std::cout << "a";
-		position += target * velocity;
-		target += target * velocity;
+void Camera::RotationAroundX(GLfloat deltaTime) {
+	//caculate angle
+	float angle = deltaTime * speedrotate;
 
-	}
-		
-	if (key == 'D' || key == 'd')
-	{
-		std::cout << "d";
-		position -= target * velocity;
-		target -= target * velocity;
-	}
-		
-	if (key == 'W' || key == 'w') {
-		std::cout << "w";
-		position += right * velocity;
-		target += right * velocity;
-	}
-		
-	if (key == 's' || key == 'S') {
-		std::cout << "s";
-		position -= right * velocity;
-		target -= right * velocity;
-	}
-		
-
+	Vector4 rotationAxis = Vector4(1, 0, 0, 0) * VCMR;
+	Matrix rotation;
+	rotation.SetIdentity();
+	rotation = rotation.SetRotationAngleAxis(angle, rotationAxis.x, rotationAxis.y, rotationAxis.z);
+	Vector4 localTarget = Vector4(0, 0, -(position - this->target).Length(), 1);
+	Vector4 localNewTarget = localTarget * rotation;
+	Vector4 worldNewTarget = localNewTarget * WCMR;
+	target = Vector3(worldNewTarget.x, worldNewTarget.y, worldNewTarget.z);
 }
+void Camera::RotationAroundY(GLfloat deltaTime) {
+	//caculate angle
+	float angle = deltaTime * speedrotate;
+
+	Vector4 rotationAxis = Vector4(0, 1, 0, 0) * VCMR;
+	Matrix rotation;
+	rotation.SetIdentity();
+	rotation = rotation.SetRotationAngleAxis(angle, rotationAxis.x, rotationAxis.y, rotationAxis.z);
+	Vector4 localTarget = Vector4(0, 0, -(position - this->target).Length(), 1);
+	Vector4 localNewTarget = localTarget * rotation;
+	Vector4 worldNewTarget = localNewTarget * WCMR;
+
+	target = Vector3(worldNewTarget.x, worldNewTarget.y, worldNewTarget.z);
+}
+void Camera::RotationAroundZ(GLfloat deltaTime) {
+	float angle = (deltaTime * speedrotate);
+
+	Vector4 rotationAxis = Vector4(0, 0, 1, 0) * VCMR;
+	Matrix rotation;
+	rotation.SetIdentity();
+	rotation = rotation.SetRotationAngleAxis(angle, rotationAxis.x, rotationAxis.y, rotationAxis.z);
+	Vector4 localTarget = Vector4(0, 0, -(position - this->target).Length(), 1);
+	Vector4 localNewTarget = localTarget * rotation;
+	Vector4 worldNewTarget = localNewTarget * WCMR;
+	target = Vector3(worldNewTarget.x, worldNewTarget.y, worldNewTarget.z);
+}
+
