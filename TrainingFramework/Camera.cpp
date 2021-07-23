@@ -7,7 +7,7 @@
 void Camera::initCMR() {
 	m_far = 100.0f;
 	m_near = 0.1f;
-	m_FOV = 45.0f;
+	m_FOV = 1.0f;
 	position.x = 0.0f; position.y = 1.0f; position.z = -4.0f;
 	target.x = 0.0f; target.y = 0.0f; target.z = -1.0f;
 	up.x = 0.0f; up.y = 1.0f; up.z = 0.0f;
@@ -69,22 +69,26 @@ void  Camera::MoveForward(GLfloat deltaTime) {
 	Vector3 deltaMove = -(position - target).Normalize() * deltaTime * speedCamera;
 	position += deltaMove;
 	target += deltaMove;
+	
 }
 void  Camera::MoveBackward(GLfloat deltaTime) {
 	Vector3 deltaMove = -(position - target).Normalize() * deltaTime * speedCamera;
 	position -= deltaMove;
 	target -= deltaMove;
+	
 }
 void  Camera::MoveLeft(GLfloat deltaTime) {
 	Vector3 deltaMove = -(Wup.Cross(zasis)).Normalize() * deltaTime * speedCamera;
 
 	position -= deltaMove;
 	target -= deltaMove;
+	
 }
 void  Camera::MoveRight(GLfloat deltaTime) {
 	Vector3 deltaMove = -(Wup.Cross(zasis)).Normalize() * deltaTime * speedCamera;
 	position += deltaMove;
 	target += deltaMove;
+	
 }
 
 void Camera::RotationAroundX(GLfloat deltaTime) {
@@ -99,6 +103,7 @@ void Camera::RotationAroundX(GLfloat deltaTime) {
 	Vector4 localNewTarget = localTarget * rotation;
 	Vector4 worldNewTarget = localNewTarget * WCMR;
 	target = Vector3(worldNewTarget.x, worldNewTarget.y, worldNewTarget.z);
+	
 }
 void Camera::RotationAroundY(GLfloat deltaTime) {
 	//caculate angle
@@ -113,6 +118,7 @@ void Camera::RotationAroundY(GLfloat deltaTime) {
 	Vector4 worldNewTarget = localNewTarget * WCMR;
 
 	target = Vector3(worldNewTarget.x, worldNewTarget.y, worldNewTarget.z);
+	
 }
 void Camera::RotationAroundZ(GLfloat deltaTime) {
 	float angle = (deltaTime * speedrotate);
@@ -125,5 +131,13 @@ void Camera::RotationAroundZ(GLfloat deltaTime) {
 	Vector4 localNewTarget = localTarget * rotation;
 	Vector4 worldNewTarget = localNewTarget * WCMR;
 	target = Vector3(worldNewTarget.x, worldNewTarget.y, worldNewTarget.z);
+	
 }
 
+Camera::Camera() {
+	initCMR();
+	updateCMR();
+}
+Camera::~Camera() {
+
+}

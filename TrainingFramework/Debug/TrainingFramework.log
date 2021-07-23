@@ -1,3 +1,6 @@
 ﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  TrainingFramework.cpp
+  Object.cpp
+C:\Users\Xuan Ngoc\Desktop\New folder\TrainingFramework\Object.cpp(10,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Xuan Ngoc\Desktop\New folder\TrainingFramework\Object.cpp(11,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Xuan Ngoc\Desktop\New folder\TrainingFramework\Object.cpp(12,27): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
   TrainingFramework.vcxproj -> C:\Users\Xuan Ngoc\Desktop\New folder\BIN\TrainingFramework.exe

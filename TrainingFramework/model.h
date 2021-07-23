@@ -12,5 +12,6 @@ public:
 	GLuint m_vboId;
 	GLuint m_iboID;
 	Model();
+	Model(char* file);
 	~Model();
 };

@@ -12,7 +12,8 @@
 #include "Model.h"
 #include "Object.h"
 #include"Camera.h"
-//#include"ResourceManager.h"
+#include"ResourceManager.h"
+#include"SceneManager.h"
 #include<iostream>
 
 #define MOVE_FORWARD 1
@@ -29,24 +30,28 @@
 int keyPressed = 0;
 
 Shaders myShaders;
-Texture* myTexture = new Texture();
-Model* myModel = new Model();
-Object* myObject = new Object();
-Camera* myCamera = new Camera();
+//Texture* myTexture = new Texture();
+//Model* myModel = new Model();
+//Object* myObject = new Object();
+ResourceManager* myRM = new ResourceManager();
+SceneManager* mySM = new SceneManager();
+//Camera* myCamera = new Camera();
 Matrix a;
 GLfloat agle = 0.0f;
 
 int Init(ESContext* esContext)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	myTexture->initTexture("../Texture/Woman1.tga");
-	myModel->initNFG("../Model/Woman1.nfg");
-	myObject->InitObject();
-	myObject->Ry.SetRotationY(agle);
+	//myTexture->initTexture("../Texture/Woman1.tga");
+	//myModel->initNFG("../Model/Woman1.nfg");
+	//myObject->InitObject("../Model/Woman1.nfg", "../Texture/Woman1.tga");
+	//myObject->Ry.SetRotationY(agle);
 	//myRM->initRM();
-	myCamera->initCMR();
-	myCamera->setWorldMatrixCMR();
-	myCamera->setViewMatrixCMR();
+	myRM->initRM();
+	mySM->initSM(myRM->listObj);
+	//myCamera->initCMR();
+	//myCamera->setWorldMatrixCMR();
+	//myCamera->setViewMatrixCMR();
 	char* vs = "../Resources/Shaders/TriangleShaderVS.vs";
 	//creation of shaders and program 
 	return myShaders.Init(vs, "../Resources/Shaders/TriangleShaderFS.fs");
@@ -57,38 +62,10 @@ void Draw(ESContext* esContext)
 	glEnable(GL_DEPTH_TEST);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glUseProgram(myShaders.program);
-
-	glUniformMatrix4fv(myShaders.u_projection, 1, GL_FALSE, (const GLfloat*)myCamera->PCMR.m);
-	glUniformMatrix4fv(myShaders.u_view, 1, GL_FALSE, (const GLfloat*)myCamera->VCMR.m);
-	// 
-	glBindTexture(GL_TEXTURE_2D, myTexture->TextureId);
-	glBindBuffer(GL_ARRAY_BUFFER, myModel->m_vboId);
-	if (myShaders.positionAttribute != -1)
-	{
-		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-		glEnableVertexAttribArray(myShaders.positionAttribute);
-	}
-	if (myShaders.uvLoc != -1)
-	{
-		glUniform1i(myShaders.textureUniform, 0);
-		glVertexAttribPointer(myShaders.uvLoc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(Vector3)));
-		glEnableVertexAttribArray(myShaders.uvLoc);
-	}
-
-
-	glUniformMatrix4fv(myShaders.u_transLoc, 1, GL_FALSE, (const GLfloat*)myObject->wordl.m);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, myModel->m_iboID);
-	glDrawElements(GL_TRIANGLES, myModel->numberOfIndice, GL_UNSIGNED_INT, 0);
-
-
-	//đóng cổng
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+	//for (int i = 0; i < myRM->listObj.size(); i++) {
+	//	myRM->listObj.at(i)->draw(myCamera, myShaders);
+	//}
+	mySM->draw(myRM->listObj, myShaders);
 
 	eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
@@ -96,41 +73,41 @@ void Draw(ESContext* esContext)
 void Update(ESContext* esContext, float deltaTime)
 {
 	if (keyPressed & ROTATE_X) {
-		myCamera->RotationAroundX(deltaTime);
+		mySM->s_camera->RotationAroundX(deltaTime);
 	}
 
 	if (keyPressed & ROTATE_Y) {
-		myCamera->RotationAroundY(deltaTime);
+		mySM->s_camera->RotationAroundY(deltaTime);
 	}
 	if (keyPressed & ROTATE_Z) {
-		myCamera->RotationAroundZ(deltaTime);
+		mySM->s_camera->RotationAroundZ(deltaTime);
 	}
 	if (keyPressed & ROTATE_X_NEG) {
-		myCamera->RotationAroundX(-deltaTime);
+		mySM->s_camera->RotationAroundX(-deltaTime);
 	}
 
 	if (keyPressed & ROTATE_Y_NEG) {
-		myCamera->RotationAroundY(-deltaTime);
+		mySM->s_camera->RotationAroundY(-deltaTime);
 	}
 	if (keyPressed & ROTATE_Z_NEG) {
-		myCamera->RotationAroundZ(-deltaTime);
+		mySM->s_camera->RotationAroundZ(-deltaTime);
 	}
 	if (keyPressed & MOVE_FORWARD) {
-		myCamera->MoveForward(deltaTime);
+		mySM->s_camera->MoveForward(deltaTime);
 	}
 
 	if (keyPressed & MOVE_BACKWARD) {
-		myCamera->MoveBackward(deltaTime);
+		mySM->s_camera->MoveBackward(deltaTime);
 	}
 
 	if (keyPressed & MOVE_LEFT) {
-		myCamera->MoveLeft(deltaTime);
+		mySM->s_camera->MoveLeft(deltaTime);
 	}
 
 	if (keyPressed & MOVE_RIGHT) {
-		myCamera->MoveRight(deltaTime);
+		mySM->s_camera->MoveRight(deltaTime);
 	}
-	myCamera->updateCMR();
+	mySM->s_camera->updateCMR();
 }
 
 void Key(ESContext* esContext, unsigned char key, bool bIsPressed)

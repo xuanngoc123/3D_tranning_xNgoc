@@ -4,7 +4,7 @@
 #include<iostream>
 using namespace std;
 
-void Texture::initTexture(char* fileName) {
+void Texture::initTexture(char* fileName, GLint wrap, GLint filter1, GLint filter2) {
 	
 	char* imgData = LoadTGA(fileName, &width, &height, &bpp);
 
@@ -24,15 +24,18 @@ void Texture::initTexture(char* fileName) {
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	glGenerateMipmap(GL_TEXTURE_2D);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter2);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 Texture::Texture() {
 
+}
+Texture::Texture(char* file, GLint wrap, GLint filter1, GLint filter2) {
+	initTexture(file, wrap, filter1, filter2);
 }
 Texture::~Texture() {
 

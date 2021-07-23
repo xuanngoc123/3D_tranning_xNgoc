@@ -59,6 +59,9 @@ void Model::initNFG(char* fileName) {
 Model::Model() {
 
 }
+Model::Model(char* file) {
+	initNFG(file);
+}
 Model::~Model() {
 
 }

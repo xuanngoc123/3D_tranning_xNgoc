@@ -4,12 +4,16 @@
 //#include "../Utilities/Math.h"
 #include"Shaders.h"
 #include<vector>
+#include"Model.h"
+#include"Texture.h"
+#include"Camera.h"
 using namespace std;
 //#include "Math.h"
 
 class Object {
 public:
-	vector<Object*> listObj;
+	Model* model;
+	Texture* texture;
 
 	Matrix Rx;
 	Matrix Ry;
@@ -24,15 +28,18 @@ public:
 	Matrix WVP;
 
 
-	Matrix setRotation();
+	Matrix setRotation(float x, float y, float z);
 
 	Matrix setWordl();
 	//Matrix setView();
 	
+	void draw(Shaders shader);
 
+	Vector3 o_positon, o_rotation, o_scale;
 
 	void InitObject();
 	Object();
+	Object(Model* submodel, Texture* subtexture);
 	~Object();
 
 

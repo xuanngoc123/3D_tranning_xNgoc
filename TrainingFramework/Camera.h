@@ -43,4 +43,6 @@ public:
 	void RotationAroundX(GLfloat deltaTime);
 	void RotationAroundY(GLfloat deltaTime);
 	void RotationAroundZ(GLfloat deltaTime);
+	Camera();
+	~Camera();
 };
