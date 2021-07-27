@@ -55,6 +55,8 @@ void Model::initNFG(char* fileName) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_iboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Nindices * sizeof(int), indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	delete[] veticalData;
+	delete[] indices;
 }
 Model::Model() {
 
@@ -63,5 +65,6 @@ Model::Model(char* file) {
 	initNFG(file);
 }
 Model::~Model() {
-
+	//glDeleteBuffers(1, &m_iboID);
+	//glDeleteBuffers(1, &m_vboId);
 }

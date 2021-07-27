@@ -30,6 +30,7 @@ void Texture::initTexture(char* fileName, GLint wrap, GLint filter1, GLint filte
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter2);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	delete imgData;
 }
 Texture::Texture() {
 
@@ -38,5 +39,5 @@ Texture::Texture(char* file, GLint wrap, GLint filter1, GLint filter2) {
 	initTexture(file, wrap, filter1, filter2);
 }
 Texture::~Texture() {
-
+	//glDeleteBuffers(1, &TextureId);
 }

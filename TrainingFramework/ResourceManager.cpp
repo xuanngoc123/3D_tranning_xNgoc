@@ -3,6 +3,7 @@
 #include<iostream>
 #include"Texture.h"
 #include"Model.h"
+#include<stdio.h>
 using namespace std;
 void ResourceManager::initRM() {
 	FILE* file;
@@ -12,13 +13,14 @@ void ResourceManager::initRM() {
 
 	Shaders subShader;
 	char filename2[30], filename1[30], wrap[10], filter1[15], filter2[15], vs[50], fs[50];
-
-
+	Model* submodel;
+	Texture* subTexture;
+	Object* subObj;
 	fscanf(file, "#Models: %d\n", &NmOfModel);
 	for (int i = 0; i < NmOfModel; i++) {
-		fscanf(file, "ID %d\n", &id);
+		fscanf(file, "ID %d\n", &id); 
 		fscanf(file, "FILE %s\n", &filename2);
-		Model* submodel = new Model(filename2);
+		submodel = new Model(filename2);
 		listModel.push_back(submodel);
 	}
 	fscanf(file, "#2D Textures: %d\n", &NmOftexture);
@@ -32,18 +34,27 @@ void ResourceManager::initRM() {
 		fscanf(file, "FILTER %s %s\n", &filter1, &filter2);
 		if (strcmp(filter1, "LINEAR") == 0); subFilter1 = GL_LINEAR;
 		if (strcmp(filter2, "LINEAR") == 0); subfilter2 = GL_LINEAR;
-		Texture* subTexture = new Texture(filename1, subWrap, subFilter1, subfilter2);
+		subTexture = new Texture(filename1, subWrap, subFilter1, subfilter2);
 		listTexture.push_back(subTexture);
 	}
 
 	for (int i = 0; i < NmOfModel; i++) {
-		Object* subObj= new Object(listModel.at(i), listTexture.at(i));
+		subObj= new Object(listModel.at(i), listTexture.at(i));
 		listObj.push_back(subObj);
 	}
+	fclose(file);
+	delete submodel;
+	delete subTexture;
+	delete subObj;
 }
 ResourceManager::ResourceManager() {
 
 }
 ResourceManager::~ResourceManager() {
-
+	for (int i = 0; i < listModel.size(); i++) {
+		listModel.at(i)->~Model();
+	}
+	for (int i = 0; i < listTexture.size(); i++) {
+		listTexture.at(i)->~Texture();
+	}
 }

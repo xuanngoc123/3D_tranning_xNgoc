@@ -6,7 +6,6 @@
 using namespace std;
 class Model {
 public:
-	//vector<Vertex*> listVerticalData;
 	int numberOfIndice;
 	void initNFG(char* fileName);
 	GLuint m_vboId;

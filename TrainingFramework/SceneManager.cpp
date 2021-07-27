@@ -37,15 +37,19 @@ void SceneManager::initSM(vector<Object*> listObj) {
 		listObj.at(i)->o_scale.x = x; listObj.at(i)->o_scale.y = y; listObj.at(i)->o_scale.z = z;
 		listObj.at(i)->setWordl();
 	}
+	fclose(file);
 }
 void SceneManager::draw(vector<Object*> listObj, Shaders shader) {
 	glUseProgram(shader.program);
 	glUniformMatrix4fv(shader.u_projection, 1, GL_FALSE, (const GLfloat*)s_camera->PCMR.m);
 	glUniformMatrix4fv(shader.u_view, 1, GL_FALSE, (const GLfloat*)s_camera->VCMR.m);
-	for (int i = 0; i < listObj.size(); i++) {
-		//cout << s_camera->position.x << endl; 
-		//cout << listObj.at(i)->trans.m[3][0]  << " " << listObj.at(i)->trans.m[3][1] << " " << listObj.at(i)->trans.m[3][2] << endl;
-		//listObj.at(i)->trans.SetTranslation(i, i, i);
+	for (int i = 0; i < listObj.size()-1; i++) {
 		listObj.at(i)->draw(shader);
 	}
+}
+SceneManager::SceneManager() {
+
+}
+SceneManager::~SceneManager() {
+	delete s_camera;
 }

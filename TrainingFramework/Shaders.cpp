@@ -22,12 +22,13 @@ int Shaders::Init(char * fileVertexShader, char * fileFragmentShader)
 	positionAttribute = glGetAttribLocation(program, "a_posL");
 	colorAttribute = glGetAttribLocation(program, "a_color");
 	uvLoc = glGetAttribLocation(program, "a_uv");
-	textureLoc = glGetUniformLocation(program, "u_texture");
 	u_transLoc = glGetUniformLocation(program, "u_MVP");
 	textureUniform = glGetUniformLocation(program, "u_texture");
 	u_view = glGetUniformLocation(program, "u_view");
 	u_projection = glGetUniformLocation(program, "u_projection");
 
+	//cubeVertexLoc = glGetAttribLocation(program, "a_CubeVertexPos");
+	cubeTextureLoc = glGetUniformLocation(program, "u_samplerCubeMap");
 	return 0;
 }
 

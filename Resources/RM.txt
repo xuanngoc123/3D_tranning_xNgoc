@@ -1,11 +1,13 @@
-#Models: 3
+#Models: 4
 ID 0
 FILE ../Models/Woman1.nfg
 ID 1
 FILE ../Models/Woman2.nfg
 ID 2
 FILE ../Models/fire.nfg
-#2D Textures: 3
+ID 3
+FILE ../Models/SkyBox.nfg
+#2D Textures: 4
 ID 0
 FILE ../Textures/Woman1.tga
 WRAP REPEAT
@@ -16,6 +18,10 @@ WRAP REPEAT
 FILTER LINEAR LINEAR
 ID 2
 FILE ../Textures/fire3.tga
+WRAP CLAMP
+FILTER LINEAR LINEAR
+ID 3
+FILE ../Textures/envMap.tga
 WRAP CLAMP
 FILTER LINEAR LINEAR
 #Shaders: 1

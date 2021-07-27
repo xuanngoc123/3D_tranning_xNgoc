@@ -12,5 +12,6 @@ public:
 	void initSM(vector<Object*> listObj);
 
 	void draw(vector<Object*> listObj, Shaders shader);
-
+	SceneManager();
+	~SceneManager();
 };
